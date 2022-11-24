@@ -10,18 +10,24 @@ module.exports = {
             res.status(500).json({ error: err.message })
         }
     },
-    async store(req, res){
-        const { username, password } = req.body
 
-        if(!username || !password){
+    async store(req, res){
+        const { username, password, email } = req.body
+
+        if(!username || !password || !email){
             return res.status(400).json({error: "missing username or password"})
         }
 
         const user = new User({
             _id: uuid(),
             username,
-            password
+            password,
+            email
         })
+
+        if(await User.findOne({ email }) || await User.findOne({ username })){
+            return res.status(400).json({ error: 'Username or email existed' })
+        }
 
         try{
             await user.save()
@@ -50,7 +56,7 @@ module.exports = {
 
             return res.status(200).json({ user })
         }catch(err){
-            res.status(400).json({ error: err.message })
+            res.status(400).json({ error: err.message }) 
         }
     },
     async user(req, res){
