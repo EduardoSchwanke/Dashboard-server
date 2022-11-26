@@ -1,5 +1,6 @@
 const User = require('../models/User')
 const { v4: uuid } = require('uuid')
+const mailer = require('../modules/mailer')
 
 module.exports = {
     async index(req, res){
@@ -31,7 +32,7 @@ module.exports = {
 
         try{
             await user.save()
-            return res.status(201).json({ message: 'user added with succesfully!'})
+            return res.status(201).json({ user })
         } catch (err){
             res.status(400).json({ error: err.message })
         }
@@ -70,6 +71,31 @@ module.exports = {
             return res.status(200).json({user})
         }catch(err){
             res.status(400).json({ error: err.message })
+        }
+    },
+    async forgotPassword(req, res) {
+        const { email } = req.body
+
+        try{
+            const {username, password} = await User.findOne({email})
+            console.log({password})
+            if(!username)
+                return res.status(400).json({ error: 'email not existed' })
+            
+            mailer.sendMail({
+                to: email,
+                from: "carvalhoe089@gmail.com",
+                template: 'forgot_password',
+                context: {username, password}
+            }, (err) => {
+                if(err){
+                    console.log(err)
+                    res.status(400).json({ error: 'cannot send email' })
+                }
+                return res.send()
+            })
+        }catch(err){
+            res.status(400).json({ error: 'error on forgot password' })
         }
     }
 }
