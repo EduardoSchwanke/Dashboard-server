@@ -23,7 +23,8 @@ module.exports = {
             _id: uuid(),
             username,
             password,
-            email
+            email,
+            profileImg: 'perfil.png'
         })
 
         if(await User.findOne({ email }) || await User.findOne({ username })){
@@ -88,6 +89,16 @@ module.exports = {
         }catch(err){
             return res.status(400).json({ error: err.message })
         }
+    },
+
+    async delete(req, res){
+        const { id } = req.params
+        try{
+            const userUpdate = await User.findByIdAndRemove(id)
+            res.status(200).json({message: "User delete with successfully!"})
+       }catch(err){
+           return res.status(400).json({ error: err.message })
+       }
     },
 
     async forgotPassword(req, res) {
