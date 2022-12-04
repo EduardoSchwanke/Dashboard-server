@@ -8,5 +8,6 @@ routes.post("/users", UserController.store)
 routes.post("/login", UserController.login)
 routes.post("/user", UserController.user)
 routes.post("/forgot_password", UserController.forgotPassword)
+routes.put("/user/:id", UserController.update)
 
 module.exports = routes 

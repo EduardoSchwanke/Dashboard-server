@@ -73,6 +73,23 @@ module.exports = {
             res.status(400).json({ error: err.message })
         }
     },
+
+    async update(req, res){
+        const {username, email, password} = req.body
+        const { id } = req.params
+        try{
+             const userUpdate = await User.findById(id)
+             await userUpdate.updateOne({
+                username: username,
+                email: email,
+                password: password
+             })
+             res.status(200).json({message: "User update with successfully!"})
+        }catch(err){
+            return res.status(400).json({ error: err.message })
+        }
+    },
+
     async forgotPassword(req, res) {
         const { email } = req.body
 
