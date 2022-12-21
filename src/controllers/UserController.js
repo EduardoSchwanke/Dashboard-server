@@ -1,6 +1,7 @@
 const User = require('../models/User')
 const { v4: uuid } = require('uuid')
 const mailer = require('../modules/mailer')
+const Post = require('../models/Post')
 
 module.exports = {
     async index(req, res){
@@ -124,6 +125,28 @@ module.exports = {
             })
         }catch(err){
             res.status(400).json({ error: 'error on forgot password' })
+        }
+    }, 
+
+    async createPost(req, res) {
+        const { auth, title, content } = req.body
+
+        if(!title || !content){
+            return res.status(400).json({error: "missing title or content"})
+        }
+
+        const post = new Post({
+            _id: uuid(),
+            auth,
+            title,
+            content
+        })
+
+        try{
+            await post.save()
+            return res.status(201).json({ post })
+        } catch (err){
+            res.status(400).json({ error: err.message })
         }
     }
 }

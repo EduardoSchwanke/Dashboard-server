@@ -5,6 +5,7 @@ const UserController = require('./controllers/UserController')
 
 routes.get("/users", UserController.index)
 routes.post("/users", UserController.store)
+routes.post("/post", UserController.createPost)
 routes.post("/login", UserController.login)
 routes.post("/user", UserController.user)
 routes.post("/forgot_password", UserController.forgotPassword)

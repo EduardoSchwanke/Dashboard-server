@@ -8,7 +8,6 @@ const postSchema = new mongoose.Schema({
     auth: {
         type: String, 
         required: true,
-        unique: true
     },
     title: {
         type: String,
