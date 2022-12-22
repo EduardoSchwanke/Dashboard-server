@@ -158,4 +158,17 @@ module.exports = {
             res.status(500).json({ error: err.message })
         }
     },
+
+    async postAuth(req, res) {
+        const { id } = req.params
+
+        try{
+            const postsAuth = await Posts.find({
+                auth: id
+            })
+            res.status(200).json({postsAuth})
+        }catch(err){
+            res.status(500).json({ error: err.message })
+        }
+    }
 }
