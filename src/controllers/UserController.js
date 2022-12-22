@@ -1,7 +1,7 @@
 const User = require('../models/User')
 const { v4: uuid } = require('uuid')
 const mailer = require('../modules/mailer')
-const Post = require('../models/Post')
+const Posts = require('../models/Posts')
 
 module.exports = {
     async index(req, res){
@@ -132,10 +132,10 @@ module.exports = {
         const { auth, title, content } = req.body
 
         if(!title || !content){
-            return res.status(400).json({error: "missing title or content"})
+            return res.status(400).json({error: "missing title or content or auth"})
         }
 
-        const post = new Post({
+        const post = new Posts({
             _id: uuid(),
             auth,
             title,
@@ -148,5 +148,14 @@ module.exports = {
         } catch (err){
             res.status(400).json({ error: err.message })
         }
-    }
+    },
+
+    async listPost(req, res){
+        try {
+            const posts = await Posts.find()
+            return res.status(200).json({ posts })
+        } catch(err) {
+            res.status(500).json({ error: err.message })
+        }
+    },
 }
